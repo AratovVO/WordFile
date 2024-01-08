@@ -32,18 +32,18 @@ public class TableReader {
     }
 
 
-    public static Map<Integer, String> readedMap(TableReader reader) { // метод считывает таблицу из файла
+    public static Map<Integer, String> readedMap(TableReader readedColumn) { // метод считывает таблицу из файла
         Map<Integer, String> map = new TreeMap<>();
         int counter = 0;
-        try (FileInputStream fis = new FileInputStream(reader.getPath())) {
+        try (FileInputStream fis = new FileInputStream(readedColumn.getPath())) {
             XWPFDocument doc = new XWPFDocument(fis);
             List<XWPFTable> tables = doc.getTables();
             for (XWPFTable table : tables) {
                 List<XWPFTableRow> rows = table.getRows();
                 for (XWPFTableRow row : rows) {
                     List<XWPFTableCell> cells = row.getTableCells();
-                    if (reader.getTargetColumnIndex() < cells.size()) {
-                        XWPFTableCell target = cells.get(reader.targetColumnIndex);
+                    if (readedColumn.getTargetColumnIndex() < cells.size()) {
+                        XWPFTableCell target = cells.get(readedColumn.targetColumnIndex);
                         map.put(counter,target.getText());
                         counter++;
 //                        System.out.println("Порядковый номер ячейки: " + counter++);
@@ -55,6 +55,9 @@ public class TableReader {
             System.out.println("Файл не найден");
         } catch (ReadOnlyFileSystemException | IOException e) {
             System.out.println("Нечитаемый файл");
+        }
+        for(int i = 0; i < 4;i++){
+            map.put(i,"");
         }
         return map; // где ключ - порядковый номер ячейки, а значение - строка хранящаяся в этой ячейке
     }
