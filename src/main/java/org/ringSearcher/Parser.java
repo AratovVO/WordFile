@@ -26,16 +26,25 @@ public class Parser {
     public int findNumber(int ringNumber) {
         // В параметры метода передается номер кольца, который затем будет проверен на наличие
         // Если метод вернет -1, значит такой номер не найден, в случае успеха вернет найденный номер
-        StringBuilder sb = new StringBuilder("Зав.№");
-        String regex = sb.append(ringNumber).toString();
-        Pattern pattern = Pattern.compile("\\s*" + regex + "\\s*");
-        for (Map.Entry<Integer, String> entry : map.entrySet()) {
-            Matcher match = pattern.matcher(entry.getValue());
-            if (match.find()) {
+//        try {
+//            if (ringNumber > 374 || ringNumber < 1) {
+//                throw new NullPointerException();
+//            }
+            StringBuilder sb = new StringBuilder("Зав.№");
+            String regex = sb.append(ringNumber).toString();
+            Pattern pattern = Pattern.compile("\\s*" + regex + "\\s*");
+
+            for (Map.Entry<Integer, String> entry : map.entrySet()) {
+                Matcher match = pattern.matcher(entry.getValue());
+                if (match.find()) {
 //                System.out.println(entry.getValue()); //строка для отладки
-                return entry.getKey();
+                    return entry.getKey();
+                }
             }
-        }
+//        }
+//        catch(NullPointerException e){
+//            System.out.println("Кольцо с номером " + ringNumber + " не надйено");
+//        }
         return -1;
     }
 
@@ -47,22 +56,33 @@ public class Parser {
         Pattern regex = Pattern.compile("\\s");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Введите номера колец: ");
-        String s = scanner.nextLine();
-        Matcher match = regex.matcher(s);
-        if (s.length() >= 1 && s.length() <= 3) {
-            list.add(Integer.parseInt(s));
+        String ringNumbers = scanner.nextLine();
+        Matcher match = regex.matcher(ringNumbers);
+        if (ringNumbers.length() >= 1 && ringNumbers.length() <= 3) {
+            list.add(Integer.parseInt(ringNumbers));
         }
         if (match.find()) {
-            String[] array = s.split(String.valueOf(regex));
+            String[] array = ringNumbers.split(String.valueOf(regex));
             for (String value : array) {
                 if (value.isEmpty()) {
+                    continue;
+                }
+                if(Integer.parseInt(value) > 374 || Integer.parseInt(value) < 1){
+                    System.out.println("Кольцо с номером " + Integer.parseInt(value) + " не найдено");
                     continue;
                 }
                 list.add(Integer.parseInt(value));
             }
 //                System.out.println(Arrays.toString(array)); // строка для отладки
         }
-        if (s.equals("\n")) scanner.close();
+//        if(match.find()){
+//            String[] array = ringNumbers.split(String.valueOf(regex));
+//            Arrays.stream(array).filter(value -> {
+//                if(value.isEmpty())  return false;
+//            })
+//        }
+
+        if (ringNumbers.equals("\n")) scanner.close();
         return list;
     }
 
